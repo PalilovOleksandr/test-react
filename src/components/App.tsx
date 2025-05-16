@@ -12,8 +12,13 @@ interface Book {
   id: string;
   name: string;
 }
+interface Values {
+  x: number;
+  y: number;
+}
 const books: Book[] = bookData;
 export default function App() {
+  const [values, setValues] = useState<Values>({ x: 0, y: 0 });
   const [clicks, setClicks] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const handleClick = () => {
@@ -21,6 +26,12 @@ export default function App() {
   };
   const toggleMessage = () => {
     setIsOpen(!isOpen);
+  }
+  const updateValue = (key: keyof Values) => {
+    setValues({
+      ...values,
+      [key]: values[key] + 1,
+    });
   }
   return (
     <>
@@ -67,8 +78,15 @@ export default function App() {
       <div>
         <ClickCounter value={clicks} onUpdate={handleClick} />
         <ClickCounter value={clicks} onUpdate={handleClick} />
+      </div>
+      <div>
         <button style={{ display: "block", marginTop: "20px" }} onClick={toggleMessage}>{isOpen ? "hide message" : "Show message"}</button>
         {isOpen && <p>🎉 Surprise! You toggled me.</p>}
+      </div>
+      <div>
+        <p>x: {values.x}, y: {values.y}</p>
+        <button onClick={() => updateValue("x")}>Update x</button>
+        <button onClick={() => updateValue("y")}>Update y</button>
       </div>
     </>
   );
