@@ -8,6 +8,12 @@ import "modern-normalize";
 import "../global.css"
 import ClickCounter from './ClickCounter/ClickCounter';
 import { useState } from 'react';
+import Form from './Form/Form';
+import OrderForm from './OrderForm/OrderForm';
+import SearchForm from './SearchForm/SearchForm';
+import type { Article } from '../types';
+import ArticleList from './ArticleList/ArticleList';
+import { FetchArticles } from '../services/articlesService';
 interface Book {
   id: string;
   name: string;
@@ -21,6 +27,10 @@ export default function App() {
   const [values, setValues] = useState<Values>({ x: 0, y: 0 });
   const [clicks, setClicks] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const myKey = import.meta.env.VITE_API_KEY;
   const handleClick = () => {
     setClicks(clicks + 1);
   };
@@ -32,6 +42,21 @@ export default function App() {
       ...values,
       [key]: values[key] + 1,
     });
+  }
+  const handleOrder = (data: string) => {
+    console.log("Order", data);
+  }
+  const handleSearch = async (topic: string) => {
+    try {
+      setIsLoading(true);
+      setIsError(false);
+      const data = await FetchArticles(topic)
+      setArticles(data);
+    } catch {
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
   }
   return (
     <>
@@ -87,6 +112,16 @@ export default function App() {
         <p>x: {values.x}, y: {values.y}</p>
         <button onClick={() => updateValue("x")}>Update x</button>
         <button onClick={() => updateValue("y")}>Update y</button>
+      </div>
+      <div>
+        <Form />
+        <OrderForm onSubmit={handleOrder} />
+      </div>
+      <div>
+        <SearchForm onSubmit={handleSearch} />
+        {isLoading && <p>Loading data,please wait...</p>}
+        {isError && <p>OMAGAD IT IS ERORR,HELP PLEASE</p>}
+        {articles.length > 0 && (<ArticleList items={articles} />)}
       </div>
     </>
   );
