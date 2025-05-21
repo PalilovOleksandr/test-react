@@ -118,6 +118,7 @@ export default function App() {
         <OrderForm onSubmit={handleOrder} />
       </div>
       <div>
+        <p>{myKey}</p>
         <SearchForm onSubmit={handleSearch} />
         {isLoading && <p>Loading data,please wait...</p>}
         {isError && <p>OMAGAD IT IS ERORR,HELP PLEASE</p>}
