@@ -11,7 +11,7 @@ import { useState } from 'react';
 import Form from './Form/Form';
 import OrderForm from './OrderForm/OrderForm';
 import SearchForm from './SearchForm/SearchForm';
-import type { Article } from '../types';
+import type { Article, OrderData } from '../types/types';
 import ArticleList from './ArticleList/ArticleList';
 import { FetchArticles } from '../services/articlesService';
 interface Book {
@@ -43,7 +43,7 @@ export default function App() {
       [key]: values[key] + 1,
     });
   }
-  const handleOrder = (data: string) => {
+  const handleOrder = (data: OrderData) => {
     console.log("Order", data);
   }
   const handleSearch = async (topic: string) => {
